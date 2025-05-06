@@ -1,0 +1,6 @@
+Contact: mailto:security@cofoundr.com
+Expires: 2023-12-31T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://cofoundr.com/.well-known/security.txt
+Policy: https://cofoundr.com/security-policy
+Hiring: https://cofoundr.com/jobs
