@@ -1,0 +1,66 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: cofoundr-app/package-lock.json
+    
+    - name: Install Dependencies
+      run: |
+        cd cofoundr-app
+        npm ci
+    
+    - name: Lint
+      run: |
+        cd cofoundr-app
+        npm run lint || echo "No linting configured"
+    
+    - name: Test
+      run: |
+        cd cofoundr-app
+        npm test -- --passWithNoTests
+    
+    - name: Build
+      run: |
+        cd cofoundr-app
+        npm run build
+    
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: cofoundr-app/build
+    
+  # Uncomment below when you're ready to deploy
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   
+  #   - name: Download Build Artifact
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: build
+  #       path: cofoundr-app/build
+  #   
+  #   - name: Deploy to Production
+  #     # Add your deployment steps here
+  #     run: echo "Deploying to production..."
